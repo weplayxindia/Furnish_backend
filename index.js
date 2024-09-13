@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cookieParser())
 
 const localhost = "http://localhost:3000";
-const originUrl = "https://friendify-alpha.vercel.app";
+ const originUrl = "";
 
 app.use(
     cors({
