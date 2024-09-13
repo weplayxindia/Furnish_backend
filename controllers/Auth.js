@@ -1,4 +1,6 @@
 const bcrypt = require("bcrypt");
+const mailSender = require("../utils/mailSender");
+const signupSuccessTemplate = require("../mail/template/signUp");
 
 exports.signUp = async(req, res) => {
     try {
@@ -37,6 +39,8 @@ exports.signUp = async(req, res) => {
             password:hashedPassword,
 
         })
+
+        await mailSender(email, "Sign Up Successfully", signupSuccessTemplate(firstName,email) );
         return res.status(200).json({
             success:true,
             message:"User is Registered Successfully",
