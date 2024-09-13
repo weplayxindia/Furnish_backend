@@ -33,18 +33,7 @@ const UserSchema = new Schema({
   token : {
     type: String
   },
-  addresses: [{
-    type: {
-      type: String,
-      enum: ['home', 'work'],
-      required: true
-    },
-    street: String,
-    city: String,
-    state: String,
-    country: String,
-    zipCode: String
-  }],
+  
   phoneNumber: {
     type: String,
     required: true

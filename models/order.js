@@ -20,6 +20,18 @@ const OrderSchema = new Schema({
       type: Number,
       required: true
     },
+    addresses: [{
+        type: {
+          type: String,
+          enum: ['home', 'work'],
+          required: true
+        },
+        street: String,
+        city: String,
+        state: String,
+        country: String,
+        zipCode: String
+      }],
     status: {
       type: String,
       enum: ['pending', 'shipped', 'delivered', 'cancelled'],
@@ -30,7 +42,11 @@ const OrderSchema = new Schema({
       enum: ['pending', 'paid', 'failed'],
       default: 'pending'
     }
-  }, { timestamps: true });
+  },
+ 
+   { timestamps: true }
+
+);
   
 
 const Order = mongoose.model("Order", OrderSchema);
