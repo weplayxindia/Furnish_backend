@@ -11,6 +11,7 @@ const db = require("./config/database");
 const {cloudinaryConnect} = require("./config/cloudinary");
 const userRoutes = require("./routes/auth");
 const categoryRoutes = require('./routes/category');
+const subcategoriesRoutes = require("./routes/subcategory")
 const app = express();
 
 
@@ -40,6 +41,8 @@ cloudinaryConnect();
 
 app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/category", categoryRoutes);
+app.use("/api/v1/subcategory", subcategoriesRoutes);
+
 
 
 
