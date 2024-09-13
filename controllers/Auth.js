@@ -71,7 +71,7 @@ exports.login = async(req,res) => {
             })
         }
 
-        const existingUser = await User.findOne({email})
+        const existingUser = await User.findOne({email}).populate("orderHistory")
         if (!existingUser) {
             return res.status(400).json({
                 success: false,

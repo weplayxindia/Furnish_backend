@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const Subcategory = require('./subcategory');
+const Product = require('./product');  
 
-const categorySchema = new Schema({
+const categorySchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -10,7 +11,6 @@ const categorySchema = new Schema({
   },
   description: {
     type: String,
-    
   },
   subcategories: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -19,5 +19,27 @@ const categorySchema = new Schema({
 }, { timestamps: true });
 
 
-const Category = mongoose.model("Category", categorySchema );
+categorySchema.pre('findOneAndDelete', async function(next) {
+  try {
+    const categoryId = this.getQuery()['_id'];  
+
+    
+    const subcategories = await Subcategory.find({ category: categoryId });
+
+    
+    for (let subcategory of subcategories) {
+      await Product.deleteMany({ subcategory: subcategory._id }); 
+    }
+
+  
+    await Subcategory.deleteMany({ category: categoryId });
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+const Category = mongoose.model('Category', categorySchema);
 module.exports = Category;
