@@ -1,6 +1,8 @@
 const bcrypt = require("bcrypt");
 const mailSender = require("../utils/mailSender");
 const signupSuccessTemplate = require("../mail/template/signUp");
+const User = require("../models/user");
+const jwt = require("jsonwebtoken")
 
 exports.signUp = async(req, res) => {
     try {
@@ -37,6 +39,7 @@ exports.signUp = async(req, res) => {
             lastName,
             email,
             password:hashedPassword,
+            role:role
 
         })
 
@@ -68,7 +71,7 @@ exports.login = async(req,res) => {
             })
         }
 
-        const existingUser = await User.findOne({email}).populate("orderHistory");
+        const existingUser = await User.findOne({email})
         if (!existingUser) {
             return res.status(400).json({
                 success: false,
@@ -80,7 +83,8 @@ exports.login = async(req,res) => {
             
             const payload = {
                 email: existingUser.email,
-                id: existingUser._id
+                id: existingUser._id,
+                role : existingUser.role
             };
 
             const token = jwt.sign(payload, process.env.JWT_SECRET, {

@@ -28,7 +28,7 @@ const UserSchema = new Schema({
   role: {
     type: String,
     enum: ['customer', 'admin'], 
-    default: 'customer'
+    
   },
   token : {
     type: String
@@ -36,7 +36,7 @@ const UserSchema = new Schema({
   
   phoneNumber: {
     type: String,
-    required: true
+    
   },
   wishlist: [{
     type: mongoose.Schema.Types.ObjectId,

@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-const User = require("../modals/User");
+
 
 
 
@@ -50,9 +50,11 @@ exports.auth = async (req, res,next) => {
  }
 }
 
-exports.isAdmin = async(req, res) => {
+exports.isAdmin = async(req, res, next) => {
+    console.log("Req body", req.user)
     try {
-        if(req.user.role !== "Admin"){
+        console.log("Req body", req.user)
+        if(req.user.role !== "admin"){
             return res.status(401).json({
                 success: false,
                 message : "This is protected route valid only for Admin"
