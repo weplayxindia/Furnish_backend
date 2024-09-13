@@ -49,3 +49,21 @@ exports.auth = async (req, res,next) => {
     })
  }
 }
+
+exports.isAdmin = async(req, res) => {
+    try {
+        if(req.user.role !== "Admin"){
+            return res.status(401).json({
+                success: false,
+                message : "This is protected route valid only for Admin"
+            })
+        }
+        next();
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            message : "Error : user verification failed",
+            error : error.message
+        })
+    }
+}
