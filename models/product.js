@@ -29,11 +29,9 @@ const ProductSchema = new Schema({
     size: String, 
     dimensions: String 
   }],
-  woodFinish: {
+  woodFinish: [{
     type: String,
-    enum: ['Oak', 'Walnut', 'Mahogany', 'Pine'],
-    required: true
-  },
+  }],
   subcategory: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Subcategory',

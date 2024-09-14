@@ -2,7 +2,6 @@ const Category = require('../models/category');
 const Subcategory = require('../models/subcategory');
 const Product = require('../models/product');
 
-
 exports.searchAll = async (req, res) => {
   try {
     const searchQuery = req.query.q;
@@ -20,15 +19,23 @@ exports.searchAll = async (req, res) => {
     });
 
     
+    const categoryIds = searchCategories.map((category) => category._id);
     const searchSubcategories = await Subcategory.find({
-      name: { $regex: searchQuery, $options: 'i' },
+      $or: [
+        { name: { $regex: searchQuery, $options: 'i' } }, 
+        { category: { $in: categoryIds } }, 
+      ],
     });
 
     
+    const subcategoryIds = searchSubcategories.map((subcategory) => subcategory._id);
+
+  
     const searchProducts = await Product.find({
       $or: [
         { name: { $regex: searchQuery, $options: 'i' } },
         { description: { $regex: searchQuery, $options: 'i' } },
+        { subcategory: { $in: subcategoryIds } }, 
       ],
     }).populate('subcategory');
 
