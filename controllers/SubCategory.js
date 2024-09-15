@@ -123,3 +123,23 @@ exports.deleteSubcategory = async (req, res) => {
         error: error.message,
       });
     }}  
+
+
+
+exports.getTopSubcategories = async (req, res) => {
+  try {
+  
+    const topSubcategories = await Subcategory.find()
+      .sort({ 'products.length': -1 })  
+      .limit(10)
+      .populate('category')  
+      .populate('products')  
+      .exec();
+
+    res.status(200).json({ success: true, data: topSubcategories });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server Error', error });
+  }
+};
+
+
