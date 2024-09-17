@@ -1,60 +1,48 @@
 const express = require("express");
-
-
 require("dotenv").config();
 
 const PORT = process.env.PORT || 3000;
 const cookieParser = require("cookie-parser");
-const fileUpload = require("express-fileupload");
 const cors = require("cors");
 const db = require("./config/database");
-const {cloudinaryConnect} = require("./config/cloudinary");
+const { cloudinaryConnect } = require("./config/cloudinary");
 const userRoutes = require("./routes/auth");
 const categoryRoutes = require('./routes/category');
 const subcategoriesRoutes = require("./routes/subcategory");
-const searchRoutes = require("./routes/search")
-const productsRoutes = require("./routes/products")
-const orderRoutes = require("./routes/order")
+const searchRoutes = require("./routes/search");
+const productsRoutes = require("./routes/products");
+const orderRoutes = require("./routes/order");
+const uploadRoute = require("./routes/upload");
+
 const app = express();
+const path = require("path");
 
-
+// Connect to the database
 db.connect();
+
+// Middleware setup
+app.use(cors({
+    origin: ["http://localhost:3000", ""], 
+    credentials: true,
+}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
+app.use(express.static(path.resolve(__dirname, 'public')));
 
-const localhost = "http://localhost:3000";
- const originUrl = "";
-
-app.use(
-    cors({
-        origin: [localhost, originUrl],
-        credentials: true,
-    })
-);
-
-app.use(
-    fileUpload({
-        useTempFiles: true,
-        tempFileDir: "/tmp",
-    })
-);
-
-
+// Cloudinary connection
 cloudinaryConnect();
 
+// Route definitions
 app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/subcategory", subcategoriesRoutes);
 app.use("/api/v1/product", productsRoutes);
 app.use("/api/v1/search", searchRoutes);
 app.use("/api/v1/order", orderRoutes);
+app.use("/api/v1/upload", uploadRoute);
 
-
-
-
-
-
-
+// Start server
 app.listen(PORT, () => {
-    console.log(`server started running in port number ${PORT}`)
-})
+    console.log(`Server started running on port ${PORT}`);
+});
