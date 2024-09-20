@@ -16,6 +16,8 @@ const orderSchema = new mongoose.Schema({
         required: true
       }
     }],
+    firstName : {type : String},
+    lastName : {type : String},
     totalAmount: {
       type: Number,
       required: true
@@ -26,11 +28,12 @@ const orderSchema = new mongoose.Schema({
           enum: ['home', 'work'],
           required: true
         },
-        street: String,
+        address : String,
+        apartment: String,
         city: String,
         state: String,
         country: String,
-        zipCode: String
+        pinCode: String
       }],
     status: {
       type: String,

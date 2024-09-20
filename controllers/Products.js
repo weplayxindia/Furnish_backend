@@ -8,7 +8,7 @@ exports.createProduct = async (req, res) => {
   try {
     const { name, description, price, sizes, woodFinish, subcategoryId, stock } = req.body;
 
-    
+    console.log("subcategory id ", subcategoryId , name)
     const subcategory = await Subcategory.findById(subcategoryId);
     if (!subcategory) {
       return res.status(404).json({

@@ -13,7 +13,7 @@ const searchRoutes = require("./routes/search");
 const productsRoutes = require("./routes/products");
 const orderRoutes = require("./routes/order");
 const uploadRoute = require("./routes/upload");
-
+const paymentRoute = require("./routes/payment")
 const app = express();
 const path = require("path");
 
@@ -41,6 +41,8 @@ app.use("/api/v1/product", productsRoutes);
 app.use("/api/v1/search", searchRoutes);
 app.use("/api/v1/order", orderRoutes);
 app.use("/api/v1/upload", uploadRoute);
+app.use("/api/v1/payment", paymentRoute);
+
 
 // Start server
 app.listen(PORT, () => {

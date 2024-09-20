@@ -1,15 +1,16 @@
 const csvtojson = require('csvtojson');
 const fs = require('fs');
-const upload = require('../middleware/multerConfig');
-const Customer = require('../models/CustomerSchema');
-exports.uploader =  async (req, res) => {
+const Category = require('../models/category'); 
+const Product = require('../models/product'); 
+const Subcategory = require('../models/subcategory');
+
+exports.uploader = async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).send("No file uploaded.");
         }
 
-        const filePath = req.file.path;  
-
+        const filePath = req.file.path;
         let allRecords = [];
 
         
@@ -17,36 +18,62 @@ exports.uploader =  async (req, res) => {
             .fromFile(filePath)
             .then(async (csvData) => {
                 for (let i = 0; i < csvData.length; i++) {
+                    const categoryName = csvData[i]['Category'];
+                    const subcategoryName = csvData[i]['Subcategory'];
+
+                    
+                    let category = await Category.findOne({ name: categoryName });
+                    if (!category) {
+                        category = new Category({ name: categoryName });
+                        await category.save();
+                    }
+
+                    
+                    let subcategory = await Subcategory.findOne({
+                        name: subcategoryName,
+                        category: category._id
+                    });
+                    if (!subcategory) {
+                        subcategory = new Subcategory({
+                            name: subcategoryName,
+                            category: category._id
+                        });
+                        await subcategory.save();
+                    }
+
+                    
                     allRecords.push({
-                        customerId: csvData[i]['Customer Id'],
-                        firstName: csvData[i]['First Name'],
-                        lastName: csvData[i]['Last Name'],
-                        company: csvData[i]['Company'],
-                        city: csvData[i]['City'],
-                        country: csvData[i]['Country'],
-                        phone1: csvData[i]['Phone 1'],
-                        phone2: csvData[i]['Phone 2'],
-                        email: csvData[i]['Email'],
-                        subscriptionDate: csvData[i]['Subscription Date'],
-                        website: csvData[i]['Website'],
+                        name: csvData[i]['Name'],
+                        description: csvData[i]['Description'],
+                        images: [
+                            { url: csvData[i]['Image URL 1'], altText: csvData[i]['Image Alt Text 1'] || '' },
+                            { url: csvData[i]['Image URL 2'], altText: csvData[i]['Image Alt Text 2'] || '' }
+                        ],
+                        price: parseFloat(csvData[i]['Price']),
+                        sizes: [
+                            { size: csvData[i]['Size 1'], dimensions: csvData[i]['Dimensions 1'] },
+                            { size: csvData[i]['Size 2'], dimensions: csvData[i]['Dimensions 2'] }
+                        ],
+                        woodFinish: csvData[i]['Wood Finish'].split(',').map(finish => finish.trim()),
+                        subcategory: subcategory._id,  
+                        stock: parseInt(csvData[i]['Stock'], 10) || 0
                     });
                 }
-                console.log( "All Records ", allRecords)
 
                 
                 try {
-                    const result = await Customer.insertMany(allRecords);
+                    const result = await Product.insertMany(allRecords);
                     console.log('Data inserted successfully:', result);
                 } catch (dbError) {
                     console.error('Error inserting data into MongoDB:', dbError);
                     res.status(500).send('Error inserting data into MongoDB.');
-                    return; 
+                    return;
                 }
 
                 
                 fs.unlinkSync(filePath);
 
-                res.status(200).send('File uploaded and data successfully inserted into MongoDB');
+                res.status(200).send('File uploaded and product data successfully inserted into MongoDB');
             })
             .catch((err) => {
                 console.error('Error parsing CSV:', err);
