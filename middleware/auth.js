@@ -12,7 +12,8 @@ exports.auth = async (req, res,next) => {
     
 
     
-    const token = req.cookies.token || req.body.token || req.header("Authorization").replace("Bearer ","");
+    const token = req.cookies.token || req.body.token || req.header("Authorization")?.replace("Bearer ", "");
+
     console.log("token", token)
     
     if(!token) {
