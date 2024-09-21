@@ -4,7 +4,7 @@ const signupSuccessTemplate = (name, email) => {
     
     <head>
         <meta charset="UTF-8">
-        <title>Welcome to Friendify!</title>
+        <title>Welcome to Rajwada Furnish!</title>
         <style>
             body {
                 background-color: #f4f4f4;
@@ -67,15 +67,16 @@ const signupSuccessTemplate = (name, email) => {
     
     <body>
         <div class="container">
-            <img class="logo" src="#" alt="Rajwada  Logo">
-            <div class="message">Welcome to Rajwada furnish, ${name}!</div>
+            <img class="logo" src="https://www.rajwadafurnish.com/cdn/shop/files/Logo_PNG_Black-01_e4b638af-2761-41a5-89ef-e99167857488.png?v=1711971257&width=460" alt="Rajwada Logo">
+            <div class="message">Welcome to Rajwada Furnish, ${name}!</div>
             <div class="body">
                 <p>Hello ${name},</p>
-                <p>We're excited to have you on board. Your account has been successfully created with the email: <strong>${email}</strong>.</p>
-                <p>You can now explore all the features of Rajwada furnish and connect with friends!</p>
+                <p>Thank you for joining Rajwada Furnish, your go-to destination for exquisite furniture! Your account has been successfully created with the email: <strong>${email}</strong>.</p>
+                <p>Explore our wide range of stylish and affordable furniture to enhance your home. From elegant sofas to chic dining sets, we have something for everyone!</p>
+                <p>Get started today and enjoy a seamless shopping experience.</p>
             </div>
             <a class="cta" href="https://yourapp.com/login">Go to Your Account</a>
-            <div class="support">If you need any assistance, feel free to reach out to us at <a href="mailto:support@friendify.com">support@friendify.com</a>.</div>
+            <div class="support">If you need any assistance, feel free to reach out to us at <a href="mailto:support@rajwadafurnish.com">support@rajwadafurnish.com</a>.</div>
         </div>
     </body>
     
