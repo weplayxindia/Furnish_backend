@@ -45,8 +45,27 @@ exports.payment = async (req, res) => {
 
 
 exports.paymentCapture = async (req, res) => {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, product, firstName, lastName, address, apartment, city, state, country, pinCode, phoneNumber } = req.body;
+    const { 
+        razorpay_order_id, 
+        razorpay_payment_id, 
+        razorpay_signature, 
+        product, 
+        
+        formData
+    } = req.body;
+
     const userId = req.user.id;
+
+    // Log all fields for debugging
+    console.log("Payment Capture Request Body:", {
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature,
+        product,
+        
+        userId,
+        formData
+    });
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !product || !userId) {
         return res.status(200).json({ success: false, message: "Payment Failed" });
@@ -58,7 +77,11 @@ exports.paymentCapture = async (req, res) => {
         .digest('hex');
 
     if (generatedSignature === razorpay_signature) {
-        await buyOrder({ product, firstName, lastName, address, apartment, city, state, country, pinCode, phoneNumber, userId }, res);
+        await buyOrder({ 
+            product, 
+            formData,
+            userId 
+        }, res);
         res.json({ status: 'ok', success: true });
     } else {
         res.status(400).send('Invalid signature');
@@ -66,7 +89,8 @@ exports.paymentCapture = async (req, res) => {
 };
 
 
-const buyOrder = async ({ product, firstName, lastName, address, apartment, city, state, country, pinCode, phoneNumber, userId }, res) => {
+
+const buyOrder = async ({ product, formData, userId }, res) => {
     if (!product || !userId) {
         return res.status(400).json({
             success: false,
@@ -87,24 +111,25 @@ const buyOrder = async ({ product, firstName, lastName, address, apartment, city
 
             // Create a new order
             const newOrder = new Order({
-                firstName,
-                lastName,
+                firstName : formData.firstName,
+                lastName :formData.lastName ,
                 addresses: [{
                     type: 'home', 
-                    address,
-                    city,
-                    apartment,
-                    country,
-                    pinCode,
-                    state,
+                    address : formData.address,
+                    city : formData.city,
+                    apartment : formData.apartment,
+                    country : formData.country,
+                    pinCode : formData.pinCode,
+                    state : formData.state,
                 }],
-                phoneNumber,
+                phoneNumber :formData.phoneNumber ,
                 products: {
                     product: productId,
                     quantity: 1,
                 },
                 totalAmount,  
                 user: userId, 
+                paymentStatus : 'paid'
             });
             
             await newOrder.save();

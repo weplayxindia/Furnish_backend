@@ -45,7 +45,7 @@ exports.getOrdersByUser = async (req, res) => {
                 success:false
             })
         }
-        const orders = await Order.find({ user: userId }).populate('products.product').populate('user');
+        const orders = await Order.find({ user: userId }).populate('products.product').populate('user').populate('addresses');
 
         return res.status(200).json({
             success: true,

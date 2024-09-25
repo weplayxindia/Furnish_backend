@@ -18,6 +18,7 @@ const orderSchema = new mongoose.Schema({
     }],
     firstName : {type : String},
     lastName : {type : String},
+    phoneNumber : {type : String},
     totalAmount: {
       type: Number,
       required: true
@@ -40,13 +41,14 @@ const orderSchema = new mongoose.Schema({
       enum: ['pending', 'shipped', 'delivered', 'cancelled'],
       default: 'pending'
     },
+    
     paymentStatus: {
       type: String,
       enum: ['pending', 'paid', 'failed'],
       default: 'pending'
     }
   },
- 
+  
    { timestamps: true }
 
 );
