@@ -23,6 +23,7 @@ const orderSchema = new mongoose.Schema({
       type: Number,
       required: true
     },
+    selectedWood : {type : String},
     addresses: [{
         type: {
           type: String,

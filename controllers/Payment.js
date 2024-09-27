@@ -129,7 +129,8 @@ const buyOrder = async ({ product, formData, userId }, res) => {
                 },
                 totalAmount,  
                 user: userId, 
-                paymentStatus : 'paid'
+                paymentStatus : 'paid',
+                selectedWood : formData.selectedWood
             });
             
             await newOrder.save();
