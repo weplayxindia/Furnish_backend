@@ -151,3 +151,43 @@ exports.deleteProduct = async (req, res) => {
     }
   };
   
+
+
+
+
+exports.deleteProductByDate = async (req, res) => {
+    try {
+        const { createdAt } = req.body; 
+
+        if (!createdAt) {
+            return res.status(400).json({ message: "createdAt date is required." });
+        }
+
+        
+        const parsedDate = new Date(createdAt);
+
+        if (isNaN(parsedDate.getTime())) {
+            return res.status(400).json({ message: "Invalid date format. Please use 'YYYY-MM-DD'." });
+        }
+
+        
+        const startOfDay = new Date(parsedDate.setUTCHours(0, 0, 0, 0));
+
+        
+        const endOfDay = new Date(parsedDate.setUTCHours(23, 59, 59, 999));
+
+        
+        const products = await Product.deleteMany({
+            createdAt: { $gte: startOfDay, $lte: endOfDay }
+        });
+
+        if (products.deletedCount === 0) {
+            return res.status(404).json({ message: "No products found for the specified date." });
+        }
+
+        res.status(200).json({ message: `${products.deletedCount} product(s) deleted successfully.` });
+    } catch (error) {
+        console.error("Error deleting products:", error);
+        res.status(500).json({ message: "An error occurred while deleting the products." });
+    }
+};

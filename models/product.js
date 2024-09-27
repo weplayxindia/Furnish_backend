@@ -9,12 +9,12 @@ const ProductSchema = new Schema({
   },
   description: {
     type: String,
-    required: true
+    // required: true
   },
   images: [{
     url: {
       type: String,
-      required: true
+      // required: true
     },
     altText: {
       type: String,
