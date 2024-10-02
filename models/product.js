@@ -7,6 +7,13 @@ const ProductSchema = new Schema({
     required: true,
     trim: true
   },
+  length: {type : Number},
+  width : {type : Number},
+  height : {type : Number},
+  colore: {type : String},
+  warranty:{type : Number},
+  assembly: {type : String},
+  amazon_flipkart_price : {type : Number},
   description: {
     type: String,
     // required: true
