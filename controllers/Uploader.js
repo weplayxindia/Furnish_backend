@@ -295,6 +295,8 @@ exports.uploader = async (req, res) => {
                     } else {
                         console.warn(`No images uploaded for product at index ${i}:`, csvData[i]);
                     }
+
+                    console.log(`Data uploaded at index : ${i}`)
                 }
 
                 fs.unlinkSync(filePath); 
