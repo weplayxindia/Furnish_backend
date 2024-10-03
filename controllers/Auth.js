@@ -43,7 +43,7 @@ exports.signUp = async(req, res) => {
 
         })
 
-        await mailSender(email, "Sign Up Successfully", signupSuccessTemplate(firstName,email) );
+        // await mailSender(email, "Sign Up Successfully", signupSuccessTemplate(firstName,email) );
         return res.status(200).json({
             success:true,
             message:"User is Registered Successfully",
