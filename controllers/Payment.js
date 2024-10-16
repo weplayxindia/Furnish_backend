@@ -4,7 +4,12 @@ const Order = require('../models/order');
 const User = require('../models/user');
 const Product = require('../models/product');
 const { RAZORPAY_KEY, RAZORPAY_SECRET } = process.env;
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
+const createPDF = require('../utils/htmlToPdf');
+const mailSender = require('../utils/mailSender');
+const orderSuccessTemplate = require('../mail/template/orderSuccessful');
+
+const fs = require('fs');
 
 exports.payment = async (req, res) => {
     console.log("Request Body:", req.body);
@@ -54,6 +59,10 @@ exports.paymentCapture = async (req, res) => {
         formData
     } = req.body;
 
+    const reqBody = req.body
+
+    console.log("success payment response ", req.body)
+
     // const userId = req.user.id;
 
     // Log all fields for debugging
@@ -80,6 +89,7 @@ exports.paymentCapture = async (req, res) => {
         await buyOrder({ 
             product, 
             formData,
+            reqBody
             // userId 
         }, res);
         res.json({ status: 'ok', success: true });
@@ -90,7 +100,7 @@ exports.paymentCapture = async (req, res) => {
 
 
 
-const buyOrder = async ({ product, formData }, res) => {
+const buyOrder = async ({ product, formData, reqBody }, res) => {
     if (!product || !formData.email) {
         return res.status(400).json({
             success: false,
@@ -99,11 +109,8 @@ const buyOrder = async ({ product, formData }, res) => {
     }
 
     try {
-        
         let user = await User.findOne({ email: formData.email });
-        let userAlreadyExist = true;
-
-
+        
         if (!user) {
             const hashedPassword = await bcrypt.hash("12345678", 10); 
             user = await User.create({
@@ -111,12 +118,10 @@ const buyOrder = async ({ product, formData }, res) => {
                 lastName: formData.lastName,
                 email: formData.email,
                 password: hashedPassword,
-                
             });
             console.log("User created successfully with email:", formData.email);
         }
 
-        
         for (const productId of product) {
             const productDetails = await Product.findById(productId);
             if (!productDetails) {
@@ -150,14 +155,23 @@ const buyOrder = async ({ product, formData }, res) => {
             });
 
             await newOrder.save();
+            console.log("order details ", newOrder);
 
-            
             user.orderHistory.push(newOrder._id);
             await user.save();
+
+            
+            const invoice = await createPDF(reqBody, newOrder, productDetails.name);
+            await mailSender(formData.email, "Order Confirmed", orderSuccessTemplate(formData.firstName, newOrder._id, formData.email, newOrder.totalAmount), newOrder._id, invoice);
+            fs.unlink(invoice, (err) => {
+                if (err) {
+                    console.error("Error deleting invoice:", err);
+                } else {
+                    console.log("Invoice deleted successfully:", invoice);
+                }
+            });
             console.log("Order created successfully");
         }
-
-        
 
     } catch (error) {
         console.error("Error in buyOrder:", error);

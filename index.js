@@ -22,7 +22,7 @@ db.connect();
 
 // Middleware setup
 app.use(cors({
-    origin: ["http://localhost:3000", ""], 
+    origin: [process.env.ORIGIN_URL, ""], 
     credentials: true,
 }));
 app.use(express.urlencoded({ extended: true }));
