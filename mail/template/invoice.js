@@ -102,9 +102,7 @@ const generateInvoice = (reqBody, orderDetails, productName) => {
             <h3 class="section-title">Order Details:</h3>
             <p><strong>Sold By:</strong> Ranbanka Furniture</p>
             <p><strong>Ship-from Address:</strong> H-1-105, ROAD NO. 5 B, RICCO INDUSTRIAL AREA, CHURU,RAJASTHAN - 331001</p>
-            <p><strong>PAN:</strong> ------</p>
-            <p><strong>CIN:</strong> ------------------</p>
-            <p><strong>GSTIN:</strong> -------------- </p>
+            
           </div>
   
           <div class="table-container">
