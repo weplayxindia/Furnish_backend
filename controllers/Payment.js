@@ -217,7 +217,7 @@ exports.paymentByCashFree = async (req, res) => {
 
         
         let request = {
-            "order_amount": "1.00", 
+            "order_amount": totalPrice, 
             "order_currency": "INR",
             "order_id": await generateOrderId(), 
             "customer_details": {
