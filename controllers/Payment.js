@@ -9,6 +9,11 @@ const createPDF = require('../utils/htmlToPdf');
 const mailSender = require('../utils/mailSender');
 const orderSuccessTemplate = require('../mail/template/orderSuccessful');
 
+const {
+    Cashfree
+} = require('cashfree-pg');
+
+
 const fs = require('fs');
 
 exports.payment = async (req, res) => {
@@ -179,6 +184,115 @@ const buyOrder = async ({ product, formData, reqBody }, res) => {
             success: false,
             message: "Failed to create order",
             error: error.message
+        });
+    }
+};
+
+
+Cashfree.XClientId = process.env.CASHFREE_CLIENT_ID;
+Cashfree.XClientSecret = process.env.CASHFREE_CLIENT_SECRET;
+Cashfree.XEnvironment = Cashfree.Environment.SANDBOX;
+
+// Cashfree.XEnvironment = Cashfree.Environment.PRODUCTION;
+
+function generateOrderId() {
+    const uniqueId = crypto.randomBytes(16).toString('hex');
+
+    const hash = crypto.createHash('sha256');
+    hash.update(uniqueId);
+
+    const orderId = hash.digest('hex');
+
+    return orderId.substr(0, 12);
+}
+
+
+exports.paymentByCashFree = async (req, res) => {
+    console.log("Req body from payment start: ", req.body);
+    
+    try {
+        
+        const { firstName, lastName, phoneNumber,email, customer_email, totalPrice } = req.body;
+        console.log("Total Price : ", totalPrice)
+
+        
+        let request = {
+            "order_amount": "1.00", 
+            "order_currency": "INR",
+            "order_id": await generateOrderId(), 
+            "customer_details": {
+                "customer_id": "customer_id",        
+                "customer_phone": phoneNumber,  
+                "customer_name": ` ${firstName} ${lastName} `,    
+                "customer_email": email,  
+            },
+        };
+
+        
+        Cashfree.PGCreateOrder("2023-08-01", request)
+            .then(response => {
+                console.log(response.data);
+                res.json(response.data); 
+            })
+            .catch(error => {
+                console.error(error.response.data.message);
+                res.status(500).json({ error: error.response.data.message });
+            });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "An error occurred while processing the payment" });
+    }
+};
+
+exports.verifyPaymentByCashFree = async(req, res) => {
+    console.log("Req body from payment verify  : ", req.body)
+    const { product, totalPrice, formData } = req.body;
+    const reqBody = req.body;
+
+    try {
+        let { orderId } = req.params;
+
+        Cashfree.PGOrderFetchPayments("2023-08-01", orderId).then(async(response) => {
+            const paymentData = response.data[0];  // Accessing the first item in the array
+
+            console.log("Payment Response: ", paymentData);
+
+            if(paymentData.payment_status === "SUCCESS") {
+                console.log("Payment successful, proceeding to place the order...");
+                
+                // Call buyOrder only if the payment is successful
+                await buyOrder({
+                    product,
+                    formData,
+                    reqBody
+                }, res);
+            } else {
+                console.log("Payment status not successful:", paymentData.payment_status);
+                res.status(400).json({
+                    success: false,
+                    message: `Payment failed with status: ${paymentData.payment_status}`
+                });
+            }
+
+            return res.status(200).json({
+                message:"Payment successful",
+                success:true,
+                paymentData
+            })
+        }).catch(error => {
+            console.error("Error during payment verification: ", error.response.data.message);
+            res.status(500).json({
+                success: false,
+                message: "Error verifying payment",
+                error: error.response.data.message
+            });
+        });
+    } catch (error) {
+        console.error("Error in verifying payment: ", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error"
         });
     }
 };
