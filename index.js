@@ -31,6 +31,11 @@ app.use(express.static(path.resolve(__dirname, 'public')));
 
 cloudinaryConnect();
 
+app.get("/", (req, res) => {
+    res.status(200).json({ message: "Server is running", timestamp: new Date() });
+});
+
+
 app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/subcategory", subcategoriesRoutes);
