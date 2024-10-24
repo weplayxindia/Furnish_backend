@@ -14,13 +14,12 @@ const productsRoutes = require("./routes/products");
 const orderRoutes = require("./routes/order");
 const uploadRoute = require("./routes/upload");
 const paymentRoute = require("./routes/payment")
+const contactRoute = require("./routes/contactUs")
 const app = express();
 const path = require("path");
 
-// Connect to the database
 db.connect();
 
-// Middleware setup
 app.use(cors({
     origin: [process.env.ORIGIN_URL, ""], 
     credentials: true,
@@ -30,10 +29,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.resolve(__dirname, 'public')));
 
-// Cloudinary connection
 cloudinaryConnect();
 
-// Route definitions
 app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/subcategory", subcategoriesRoutes);
@@ -42,6 +39,7 @@ app.use("/api/v1/search", searchRoutes);
 app.use("/api/v1/order", orderRoutes);
 app.use("/api/v1/upload", uploadRoute);
 app.use("/api/v1/payment", paymentRoute);
+app.use("/api/v1/contact",contactRoute)
 
 
 // Start server
