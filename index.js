@@ -21,7 +21,7 @@ const path = require("path");
 db.connect();
 
 app.use(cors({
-    origin: [process.env.ORIGIN_URL, ""], 
+    origin: [process.env.ORIGIN_URL, process.env.ORIGIN_URL1], 
     credentials: true,
 }));
 app.use(express.urlencoded({ extended: true }));
