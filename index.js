@@ -23,6 +23,7 @@ db.connect();
 app.use(cors({
     origin: [process.env.ORIGIN_URL, process.env.ORIGIN_URL1], 
     credentials: true,
+    allowedHeaders: 'Content-Type,Authorization'
 }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
