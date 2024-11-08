@@ -75,7 +75,7 @@ const generateInvoice = (reqBody, orderDetails, productName) => {
     <body>
       <div class="container">
         <div class="header">
-          <img src="https://res.cloudinary.com/dre2ewshi/image/upload/v1729055857/lg_cgfrne.png" alt="Logo" class="logo">
+          <img src="https://res.cloudinary.com/dre2ewshi/image/upload/v1731060721/Untitled-1sssa_menbom.png" alt="Logo" class="logo">
           <h1>Order Receipt</h1>
           <p><strong>Invoice Number:</strong> RANBANKA-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}</p>
           <p><strong>Order ID:</strong> ${orderDetails._id ?? 0}</p>
