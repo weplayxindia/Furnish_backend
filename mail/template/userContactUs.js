@@ -69,7 +69,7 @@ const usercontactUsTemplate = (name, email, message) => {
     </head>
     <body>
         <div class="container">
-            <img class="logo" src="https://res.cloudinary.com/dre2ewshi/image/upload/v1729055857/lg_cgfrne.png" alt="Ranbanka Logo">
+            <img class="logo" src="https://res.cloudinary.com/dre2ewshi/image/upload/v1731060721/Untitled-1sssa_menbom.png" alt="Ranbanka Logo">
             <div class="message">Thank You for Contacting Us, ${name}!</div>
             <div class="body">
                 <p>Hello ${name},</p>
