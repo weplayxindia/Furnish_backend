@@ -71,7 +71,7 @@ const contactUsAdminTemplate = (name, email, message) => {
     <body>
         <div class="container">
             <div class="header">
-                <img src="https://res.cloudinary.com/dre2ewshi/image/upload/v1729055857/lg_cgfrne.png" alt="Ranbanka Furniture Logo" />
+                <img src="https://res.cloudinary.com/dre2ewshi/image/upload/v1731060721/Untitled-1sssa_menbom.png" alt="Ranbanka Furniture Logo" />
                 <h1>New Contact Us Message</h1>
             </div>
             <div class="body">
