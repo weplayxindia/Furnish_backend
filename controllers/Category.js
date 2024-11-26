@@ -44,12 +44,14 @@ exports.createCategory = async(req,res) => {
 exports.getAllCategory = async (req, res) => {
     try {
         const categories = await Category.find()
-            .populate({
-                path: "subcategories",
-                populate: {
-                    path: "products"
-                }
-            })
+        .populate({
+            path: "subcategories",
+            options: { sort: { arrangement: 1 } },
+            populate: {
+                path: "products"
+            }
+        })
+        
             .exec();
 
         if (!categories || categories.length === 0) {
