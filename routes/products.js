@@ -10,6 +10,6 @@ router.get("/getallproduct", getAllProducts);
 router.get(`/getproductbyid/:id`, getProductById);
 router.delete(`/deletebyid/:id`,auth, isAdmin, deleteProduct);
 router.delete(`/deletebydate`,auth, isAdmin, deleteProductByDate);
-
+router.put(`/setthumbnail`,auth, isAdmin, setThumbnail);
 
 module.exports = router;
