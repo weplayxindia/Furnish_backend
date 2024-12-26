@@ -202,6 +202,8 @@ exports.setThumbnail = async (req, res) => {
       return res.status(400).json({ error: "Product ID and thumbnail are required." });
     }
 
+    console.log("thumbnail ", thumbnail)
+
     
     const product = await Product.findByIdAndUpdate(
       productId,                     
@@ -221,4 +223,3 @@ exports.setThumbnail = async (req, res) => {
     res.status(500).json({ error: "Internal server error.", success: false });
   }
 };
-
