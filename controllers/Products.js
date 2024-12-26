@@ -191,3 +191,34 @@ exports.deleteProductByDate = async (req, res) => {
         res.status(500).json({ message: "An error occurred while deleting the products." });
     }
 };
+
+
+exports.setThumbnail = async (req, res) => {
+  try {
+    const { productId, thumbnail } = req.body;
+
+    
+    if (!productId || !thumbnail) {
+      return res.status(400).json({ error: "Product ID and thumbnail are required." });
+    }
+
+    
+    const product = await Product.findByIdAndUpdate(
+      productId,                     
+      { thumbnail },                  
+      { new: true }                   
+    );
+
+    
+    if (!product) {
+      return res.status(404).json({ error: "Product not found." });
+    }
+
+    
+    return res.status(200).json({ message: "Thumbnail updated successfully.", success: true, product });
+  } catch (error) {
+    console.error("Error updating thumbnail:", error);
+    res.status(500).json({ error: "Internal server error.", success: false });
+  }
+};
+
